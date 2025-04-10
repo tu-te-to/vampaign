@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обратный отсчёт до ВАМПЕЙНА</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a0000;
+            color: #ff0000;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-image: 
+                radial-gradient(circle, rgba(255,0,0,0.1) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255,0,0,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 4rem;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        #countdown {
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ff0000;
+            margin-bottom: 2rem;
+            color: #ff3333;
+        }
+
+        .blood-drop {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        .blood-stain {
+            position: absolute;
+            background-color: rgba(139, 0, 0, 0.5);
+            border-radius: 50%;
+            transform: rotate(45deg);
+            z-index: -1;
+        }
+
+        #date {
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            color: #cc0000;
+        }
+
+        #warning {
+            font-size: 1.8rem;
+            color: #ff0000;
+            text-shadow: 0 0 5px #ff0000;
+            margin-top: 2rem;
+            animation: blink 1s infinite;
+        }
+
+        #current-time {
+            font-size: 1.2rem;
+            color: #990000;
+            margin-top: 1rem;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .bat {
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="%23ff0000" d="M510.62,227.55c-1.05-3.03-3.29-5.38-6.34-6.34l-61.36-21.18-21.19-61.36c-1.05-3.04-3.29-5.38-6.34-6.34-3.05-1.05-6.38-0.66-9.11,1.06l-48.64,34.75C309.1,117.13,256,130.38,256,130.38s-53.1-13.25-101.44-56.26l-48.64-34.75c-2.73-1.72-6.06-2.11-9.11-1.06-3.05,1.05-5.29,3.29-6.34,6.34l-21.19,61.36-61.36,21.18c-3.05,1.05-5.29,3.29-6.34,6.34-1.05,3.05-0.66,6.38,1.06,9.11l34.75,48.64C13.25,202.9,0,256,0,256s13.25,53.1,56.26,101.44l-34.75,48.64c-1.72,2.73-2.11,6.06-1.06,9.11,1.05,3.05,3.29,5.38,6.34,6.34l61.36,21.19,21.18,61.36c1.05,3.05,3.29,5.38,6.34,6.34,3.05,1.05,6.38,0.66,9.11-1.06l48.64-34.75C202.9,498.75,256,512,256,512s53.1-13.25,101.44-56.26l48.64,34.75c2.73,1.72,6.06,2.11,9.11,1.06,3.05-1.05,5.38-3.29,6.34-6.34l21.19-61.36,61.36-21.18c3.05-1.05,5.38-3.29,6.34-6.34,1.05-3.05,0.66-6.38-1.06-9.11l-34.75-48.64C498.75,309.1,512,256,512,256S498.75,202.9,455.74,154.56l34.75-48.64C511.28,233.93,511.67,230.6,510.62,227.55z"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: fly 15s linear infinite;
+            opacity: 0.7;
+            z-index: -1;
+        }
+
+        @keyframes fly {
+            0% {
+                transform: translateX(-100px) translateY(50px) rotate(0deg);
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(calc(50px + (100vh - 100px) * var(--random-y))) rotate(360deg);
+            }
+        }
+
+        .moon {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            width: 80px;
+            height: 80px;
+            background: #ffdd00;
+            border-radius: 50%;
+            box-shadow: 0 0 30px #ffdd00;
+            z-index: -1;
+        }
+
+        .moon::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 80px;
+            height: 80px;
+            background: #1a0000;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="moon"></div>
+    <h1>ДО ВАМПЕЙНА ОСТАЛОСЬ</h1>
+    <div id="countdown"></div>
+    <div id="date">верите?</div>
+    <div id="current-time"></div>
+    <div id="warning">А ВЫ ВЕРИТЕ?!</div>
+
+    <script>
+        // Создаем кровавые капли
+        function createBloodDrops() {
+            const dropsCount = 50;
+            for (let i = 0; i < dropsCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('blood-drop');
+                drop.style.left = `${Math.random() * 100}vw`;
+                drop.style.top = `${-Math.random() * 20}px`;
+                drop.style.width = `${2 + Math.random() * 5}px`;
+                drop.style.height = drop.style.width;
+                drop.style.animationDuration = `${1 + Math.random() * 3}s`;
+                drop.style.animationDelay = `${Math.random() * 3}s`;
+                document.body.appendChild(drop);
+            }
+        }
+
+        // Создаем кровавые пятна
+        function createBloodStains() {
+            const stainsCount = 15;
+            for (let i = 0; i < stainsCount; i++) {
+                const stain = document.createElement('div');
+                stain.classList.add('blood-stain');
+                stain.style.width = `${50 + Math.random() * 150}px`;
+                stain.style.height = `${30 + Math.random() * 70}px`;
+                stain.style.left = `${Math.random() * 90}vw`;
+                stain.style.top = `${Math.random() * 90}vh`;
+                stain.style.opacity = 0.3 + Math.random() * 0.5;
+                document.body.appendChild(stain);
+            }
+        }
+
+        // Создаем летучих мышей
+        function createBats() {
+            const batsCount = 5;
+            for (let i = 0; i < batsCount; i++) {
+                const bat = document.createElement('div');
+                bat.classList.add('bat');
+                bat.style.top = `${Math.random() * 50 + 25}%`;
+                bat.style.setProperty('--random-y', Math.random());
+                bat.style.animationDuration = `${10 + Math.random() * 20}s`;
+                bat.style.animationDelay = `${Math.random() * 10}s`;
+                bat.style.width = `${30 + Math.random() * 40}px`;
+                bat.style.height = `${20 + Math.random() * 30}px`;
+                document.body.appendChild(bat);
+            }
+        }
+
+        // Обновляем текущее время
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = `Текущее время: ${now.toLocaleTimeString()}, ${now.toLocaleDateString()}`;
+            document.getElementById('current-time').textContent = timeString;
+        }
+
+        // Обновляем отсчёт
+        function updateCountdown() {
+            const now = new Date();
+            updateCurrentTime();
+            
+            // Устанавливаем целевую дату - 11 апреля 01:00 текущего года
+            const targetDate = new Date(now.getFullYear(), 3, 11, 1, 0, 0); // Месяцы 0-11, поэтому апрель - 3
+            
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('countdown').innerHTML = "ВАМПЕЙН НАСТУПИЛ!";
+                document.getElementById('warning').textContent = "ОНИ ПРОСНУЛИСЬ!";
+                document.getElementById('warning').style.animation = "blink 0.5s infinite";
+                document.getElementById('warning').style.color = "#ff0000";
+                document.getElementById('warning').style.fontSize = "3rem";
+                return;
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = 
+                `${hours} часов ${minutes} минут ${seconds} секунд`;
+        }
+
+        // Инициализация
+        window.onload = function() {
+            createBloodDrops();
+            createBloodStains();
+            createBats();
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            setInterval(updateCurrentTime, 1000);
+            
+            // Увеличиваем интенсивность капель каждую минуту
+            setInterval(() => {
+                createBloodDrops();
+            }, 60000);
+
+            // Добавляем новых летучих мышей каждые 30 секунд
+            setInterval(() => {
+                createBats();
+            }, 30000);
+        };
+    </script>
+</body>
+</html>
