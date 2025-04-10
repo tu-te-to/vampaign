@@ -90,6 +90,12 @@
             margin-top: 1rem;
         }
 
+        #event-time {
+            font-size: 1.2rem;
+            color: #990000;
+            margin-top: 0.5rem;
+        }
+
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
@@ -146,6 +152,7 @@
     <div id="countdown"></div>
     <div id="date">верите?</div>
     <div id="current-time"></div>
+    <div id="event-time"></div>
     <div id="warning">А ВЫ ВЕРИТЕ?!</div>
 
     <script>
@@ -203,13 +210,23 @@
             document.getElementById('current-time').textContent = timeString;
         }
 
+        // Форматируем дату события в локальном времени
+        function formatEventTime(targetDate) {
+            return `Игра начнётся: ${targetDate.toLocaleTimeString()}, ${targetDate.toLocaleDateString()}`;
+        }
+
         // Обновляем отсчёт
         function updateCountdown() {
             const now = new Date();
             updateCurrentTime();
             
-            // Устанавливаем целевую дату - 11 апреля 01:00 текущего года
-            const targetDate = new Date(now.getFullYear(), 3, 11, 1, 0, 0); // Месяцы 0-11, поэтому апрель - 3
+            // Устанавливаем целевую дату - 10 апреля 18:00 по Москве (UTC+3)
+            // Конвертируем в локальное время пользователя
+            const mskTime = new Date(Date.UTC(now.getFullYear(), 3, 10, 15, 0, 0)); // 18:00 Москва = 15:00 UTC
+            
+            // Локализуем время события для пользователя
+            const targetDate = new Date(mskTime);
+            document.getElementById('event-time').textContent = formatEventTime(targetDate);
             
             const diff = targetDate - now;
 
@@ -222,12 +239,18 @@
                 return;
             }
 
-            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-            document.getElementById('countdown').innerHTML = 
-                `${hours} часов ${minutes} минут ${seconds} секунд`;
+            let countdownText = '';
+            if (days > 0) {
+                countdownText += `${days} дней `;
+            }
+            countdownText += `${hours} часов ${minutes} минут ${seconds} секунд`;
+
+            document.getElementById('countdown').innerHTML = countdownText;
         }
 
         // Инициализация
