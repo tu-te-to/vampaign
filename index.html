@@ -96,6 +96,17 @@
             margin-top: 0.5rem;
         }
 
+        /* Стили для видео */
+        #vampire-video {
+            width: 60%;
+            max-width: 600px;
+            border: 3px solid #ff0000;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #ff0000;
+            margin-top: 2rem;
+            opacity: 0.9;
+        }
+
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
@@ -154,6 +165,12 @@
     <div id="current-time"></div>
     <div id="event-time"></div>
     <div id="warning">А ВЫ ВЕРИТЕ?!</div>
+    
+    <!-- Добавьте этот блок видео прямо под предыдущими элементами -->
+    <video id="vampire-video" autoplay muted loop controls>
+        <source src="vampire.mp4" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+    </video>
 
     <script>
         // Создаем кровавые капли
