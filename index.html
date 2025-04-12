@@ -239,36 +239,36 @@
             
             // Устанавливаем целевую дату - 10 апреля 18:00 по Москве (UTC+3)
             // Конвертируем в локальное время пользователя
-            const mskTime = new Date(Date.UTC(now.getFullYear(), 3, 10, 15, 0, 0)); // 18:00 Москва = 15:00 UTC
+            const mskTime = new Date(Date.UTC(now.getFullYear(), 3, 26, 15, 0, 0)); // 26 апреля, 18:00 по Москве
             
             // Локализуем время события для пользователя
-            const targetDate = new Date(mskTime);
-            document.getElementById('event-time').textContent = formatEventTime(targetDate);
-            
-            const diff = targetDate - now;
+    const targetDate = new Date(mskTime);
+    document.getElementById('event-time').textContent = formatEventTime(targetDate);
+    
+    const diff = targetDate - now;
 
-            if (diff <= 0) {
-                document.getElementById('countdown').innerHTML = "ВАМПЕЙН НАСТУПИЛ!";
-                document.getElementById('warning').textContent = "ОНИ ПРОСНУЛИСЬ!";
-                document.getElementById('warning').style.animation = "blink 0.5s infinite";
-                document.getElementById('warning').style.color = "#ff0000";
-                document.getElementById('warning').style.fontSize = "3rem";
-                return;
-            }
+    if (diff <= 0) {
+        document.getElementById('countdown').innerHTML = "ВАМПЕЙН снова НАСТУПИЛ!";
+        document.getElementById('warning').textContent = "ОНИ СОСУТ!";
+        document.getElementById('warning').style.animation = "blink 0.5s infinite";
+        document.getElementById('warning').style.color = "#ff0000";
+        document.getElementById('warning').style.fontSize = "3rem";
+        return;
+    }
 
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-            let countdownText = '';
-            if (days > 0) {
-                countdownText += `${days} дней `;
-            }
-            countdownText += `${hours} часов ${minutes} минут ${seconds} секунд`;
+    let countdownText = '';
+    if (days > 0) {
+        countdownText += `${days} дней `;
+    }
+    countdownText += `${hours} часов ${minutes} минут ${seconds} секунд`;
 
-            document.getElementById('countdown').innerHTML = countdownText;
-        }
+    document.getElementById('countdown').innerHTML = countdownText;
+}
 
         // Инициализация
         window.onload = function() {
