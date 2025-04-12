@@ -168,7 +168,7 @@
     
     <!-- Добавьте этот блок видео прямо под предыдущими элементами -->
     <video id="vampire-video" autoplay muted loop controls>
-        <source src="vampire.mp4" type="video/mp4">
+        <source src="5289611299467.mp4" type="video/mp4">
         Ваш браузер не поддерживает видео.
     </video>
 
@@ -288,7 +288,26 @@
             setInterval(() => {
                 createBats();
             }, 30000);
-        };
+        };const audio = document.getElementById('background-audio');
+
+// Попытка автовоспроизведения при загрузке (но браузер может заблокировать)
+audio.muted = false;
+audio.play().catch(e => {
+    console.log("Автовоспроизведение заблокировано. Звук запустится после клика.");
+});
+
+// Разблокировка звука при первом клике на страницу
+document.addEventListener('click', () => {
+    if (audio.paused) {
+        audio.play().then(() => {
+            audio.muted = false;
+        });
+    }
+});
     </script>
+    <audio id="background-audio" loop>
+    <source src="vampire_sound.mp3" type="audio/mpeg">
+    Ваш браузер не поддерживает аудио.
+</audio>
 </body>
 </html>
