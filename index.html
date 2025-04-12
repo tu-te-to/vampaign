@@ -23,6 +23,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='30' viewBox='0 0 24 30'><path fill='%23ff0000' d='M12,0C5.4,0,0,5.4,0,12c0,6.6,12,18,12,18s12-11.4,12-18C24,5.4,18.6,0,12,0z'/></svg>"), auto;
         }
 
         h1 {
@@ -96,7 +97,6 @@
             margin-top: 0.5rem;
         }
 
-        /* Стили для видео */
         #vampire-video {
             width: 60%;
             max-width: 600px;
@@ -155,6 +155,24 @@
             background: #1a0000;
             border-radius: 50%;
         }
+
+        /* Стили для аудио и кнопки */
+        #audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 0, 0, 0.3);
+            border: 1px solid #ff0000;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        audio {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -166,11 +184,18 @@
     <div id="event-time"></div>
     <div id="warning">А ВЫ ВЕРИТЕ?!</div>
     
-    <!-- Добавьте этот блок видео прямо под предыдущими элементами -->
     <video id="vampire-video" autoplay muted loop controls>
         <source src="5289611299467.mp4" type="video/mp4">
         Ваш браузер не поддерживает видео.
     </video>
+
+    <!-- Аудио элемент -->
+    <audio id="background-audio" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-horror-organ-drum-loop-481.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Кнопка управления звуком -->
+    <button id="audio-control">🔊</button>
 
     <script>
         // Создаем кровавые капли
@@ -237,38 +262,65 @@
             const now = new Date();
             updateCurrentTime();
             
-            // Устанавливаем целевую дату - 10 апреля 18:00 по Москве (UTC+3)
-            // Конвертируем в локальное время пользователя
-            const mskTime = new Date(Date.UTC(now.getFullYear(), 3, 26, 15, 0, 0)); // 26 апреля, 18:00 по Москве
+            // Устанавливаем целевую дату - 26 апреля 18:00 по Москве (UTC+3)
+            const mskTime = new Date(Date.UTC(now.getFullYear(), 3, 26, 15, 0, 0)); // 18:00 Москва = 15:00 UTC
             
             // Локализуем время события для пользователя
-    const targetDate = new Date(mskTime);
-    document.getElementById('event-time').textContent = formatEventTime(targetDate);
-    
-    const diff = targetDate - now;
+            const targetDate = new Date(mskTime);
+            document.getElementById('event-time').textContent = formatEventTime(targetDate);
+            
+            const diff = targetDate - now;
 
-    if (diff <= 0) {
-        document.getElementById('countdown').innerHTML = "ВАМПЕЙН снова НАСТУПИЛ!";
-        document.getElementById('warning').textContent = "ОНИ СОСУТ!";
-        document.getElementById('warning').style.animation = "blink 0.5s infinite";
-        document.getElementById('warning').style.color = "#ff0000";
-        document.getElementById('warning').style.fontSize = "3rem";
-        return;
-    }
+            if (diff <= 0) {
+                document.getElementById('countdown').innerHTML = "ВАМПЕЙН НАСТУПИЛ!";
+                document.getElementById('warning').textContent = "ОНИ ПРОСНУЛИСЬ!";
+                document.getElementById('warning').style.animation = "blink 0.5s infinite";
+                document.getElementById('warning').style.color = "#ff0000";
+                document.getElementById('warning').style.fontSize = "3rem";
+                return;
+            }
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    let countdownText = '';
-    if (days > 0) {
-        countdownText += `${days} дней `;
-    }
-    countdownText += `${hours} часов ${minutes} минут ${seconds} секунд`;
+            let countdownText = '';
+            if (days > 0) {
+                countdownText += `${days} дней `;
+            }
+            countdownText += `${hours} часов ${minutes} минут ${seconds} секунд`;
 
-    document.getElementById('countdown').innerHTML = countdownText;
-}
+            document.getElementById('countdown').innerHTML = countdownText;
+        }
+
+        // Управление аудио
+        function setupAudio() {
+            const audio = document.getElementById('background-audio');
+            const audioButton = document.getElementById('audio-control');
+            
+            // Пытаемся запустить автоматически (браузер может заблокировать)
+            audio.volume = 0.3;
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    audioButton.textContent = "🔇";
+                    console.log("Автовоспроизведение заблокировано. Нажмите кнопку звука.");
+                });
+            }
+
+            // Обработчик клика по кнопке звука
+            audioButton.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play();
+                    audioButton.textContent = "🔊";
+                } else {
+                    audio.pause();
+                    audioButton.textContent = "🔇";
+                }
+            });
+        }
 
         // Инициализация
         window.onload = function() {
@@ -276,6 +328,8 @@
             createBloodStains();
             createBats();
             updateCountdown();
+            setupAudio();
+            
             setInterval(updateCountdown, 1000);
             setInterval(updateCurrentTime, 1000);
             
@@ -288,26 +342,7 @@
             setInterval(() => {
                 createBats();
             }, 30000);
-        };const audio = document.getElementById('background-audio');
-
-// Попытка автовоспроизведения при загрузке (но браузер может заблокировать)
-audio.muted = false;
-audio.play().catch(e => {
-    console.log("Автовоспроизведение заблокировано. Звук запустится после клика.");
-});
-
-// Разблокировка звука при первом клике на страницу
-document.addEventListener('click', () => {
-    if (audio.paused) {
-        audio.play().then(() => {
-            audio.muted = false;
-        });
-    }
-});
+        };
     </script>
-    <audio id="background-audio" loop>
-    <source src="vampire_sound.mp3" type="audio/mpeg">
-    Ваш браузер не поддерживает аудио.
-</audio>
 </body>
 </html>
